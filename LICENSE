@@ -1,0 +1,17 @@
+ - CrossCompile - 
+   https://git.dorkbox.com/dorkbox
+   Copyright 2012 - The Apache Software License, Version 2.0
+     dorkbox, llc
+   License management plugin for the Gradle build system
+
+
+ - OpenJDK - 
+   https://github.com/dorkbox/JavaBuilder/tree/master/jdkRuntimes
+   http://jdk.java.net/
+   https://github.com/alexkasko/openjdk-unofficial-builds
+   Copyright 1995, 2006 - GNU General Public License, version 2, with the Classpath Exception
+     Oracle and/or its affiliates
+   Compressed OpenJDK runtimes for cross-target class compilation
+    http://hg.openjdk.java.net/jdk6/jdk6/jdk/file/79b17290a53c/THIRD_PARTY_README
+    http://hg.openjdk.java.net/jdk7/jdk7/jdk/file/9b8c96f96a0f/THIRD_PARTY_README
+    http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/THIRD_PARTY_README
