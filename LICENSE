@@ -2,7 +2,7 @@
    https://git.dorkbox.com/dorkbox/CrossCompile
    Copyright 2012 - The Apache Software License, Version 2.0
      dorkbox, llc
-   License management plugin for the Gradle build system
+   Plugin to auto-configure cross-compilation builds for java projects
 
 
  - OpenJDK - 
