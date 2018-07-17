@@ -56,13 +56,12 @@ plugins {
 apply plugin: "com.gradle.plugin-publish"
 
 
-project.description = 'Plugin to extract and configure cross-compilation'
+project.description = 'Plugin to auto-configure cross-compilation builds for java projects'
 project.group = 'com.dorkbox'
 project.version = '1.0.0'
 
 project.ext.name = 'Gradle CrossCompile Plugin'
 project.ext.id = 'CrossCompile'
-project.ext.website = 'https://dorkbox.com/'
 project.ext.url = 'https://git.dorkbox.com/dorkbox/CrossCompile'
 project.ext.tags = ['crosscompile', 'compile', 'java', 'kotlin', 'groovy']
 
@@ -72,7 +71,7 @@ licensing {
         copyright 2012
         author 'dorkbox, llc'
         url 'https://git.dorkbox.com/dorkbox/CrossCompile'
-        note 'License management plugin for the Gradle build system'
+        note 'Plugin to auto-configure cross-compilation builds for java projects'
     }
 
     license('OpenJDK', License.GPLv2_CLASSPATH) {
@@ -138,7 +137,7 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = project.ext.website
+    website = project.ext.url
     vcsUrl = project.ext.url
 
     plugins {
