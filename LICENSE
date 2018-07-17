@@ -1,5 +1,5 @@
  - CrossCompile - 
-   https://git.dorkbox.com/dorkbox
+   https://git.dorkbox.com/dorkbox/CrossCompile
    Copyright 2012 - The Apache Software License, Version 2.0
      dorkbox, llc
    License management plugin for the Gradle build system
