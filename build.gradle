@@ -17,6 +17,7 @@
 import dorkbox.license.License
 
 import java.nio.file.Paths
+import java.time.Instant
 
 buildscript {
     // load properties from custom location
@@ -122,6 +123,15 @@ dependencies {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.incremental = true
+}
+
+tasks.withType(Jar) {
+    duplicatesStrategy DuplicatesStrategy.FAIL
+
+    manifest {
+        attributes['Implementation-Version'] = project.version
+        attributes['Build-Date'] = Instant.now().toString()
+    }
 }
 
 ///////////////////////////////
