@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import dorkbox.license.License
-
 import java.nio.file.Paths
 import java.time.Instant
 
@@ -25,19 +23,18 @@ buildscript {
     println("Loading custom property data from: ${propsFile}")
 
     def props = new Properties()
-    propsFile.withInputStream { props.load(it) }
-    props.each { key, val ->
-        project.ext.set(key, val)
-    }
+    propsFile.withInputStream {props.load(it)}
+    props.each {key, val -> project.ext.set(key, val)}
 
-    // for plugin publishing
+    // for plugin publishing and license sources
     repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath "com.gradle.publish:plugin-publish-plugin:0.9.10"
+
+        classpath "gradle.plugin.com.dorkbox:Licensing:1.2.2"
+        classpath "gradle.plugin.com.dorkbox:Licensing:1.2.2:sources"
     }
 }
 
@@ -45,21 +42,21 @@ buildscript {
 plugins {
     id 'java'
     id 'java-gradle-plugin'
-    id 'maven-publish'
-    id 'signing'
 
-    id "org.jetbrains.kotlin.jvm" version "1.2.51"
+    id "org.jetbrains.kotlin.jvm" version "1.2.60"
     id 'de.undercouch.download' version '3.4.3'
-    id "com.dorkbox.Licensing" version "1.1.0"
 }
 
 // for publishing the plugin to gradle
 apply plugin: "com.gradle.plugin-publish"
 
+// this is the only way to also get the source code for IDE auto-complete
+apply plugin: "com.dorkbox.Licensing"
+
 
 project.description = 'Plugin to auto-configure cross-compilation builds for java projects'
 project.group = 'com.dorkbox'
-project.version = '1.0.0'
+project.version = '1.0'
 
 project.ext.name = 'Gradle CrossCompile Plugin'
 project.ext.id = 'CrossCompile'
@@ -69,7 +66,6 @@ project.ext.tags = ['crosscompile', 'compile', 'java', 'kotlin', 'groovy']
 
 licensing {
     license(License.APACHE_2) {
-        copyright 2012
         author 'dorkbox, llc'
         url 'https://git.dorkbox.com/dorkbox/CrossCompile'
         note 'Plugin to auto-configure cross-compilation builds for java projects'
@@ -110,7 +106,7 @@ repositories {
 
 
 dependencies {
-    compileOnly 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.51'
+    compileOnly 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.60'
 
     implementation 'de.undercouch:gradle-download-task:latest.release'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.17'
@@ -158,105 +154,5 @@ pluginBundle {
             tags = project.ext.tags
             version = project.version
         }
-    }
-}
-
-///////////////////////////////
-//////    Maven Publishing + Release
-///////////////////////////////
-task sourceJar(type: Jar) {
-    description = "Creates a JAR that contains the source code."
-
-    from sourceSets.main.allSource
-
-    classifier = "sources"
-}
-
-task javaDocJar(type: Jar) {
-    description = "Creates a JAR that contains the javadocs."
-
-    classifier = "javadoc"
-}
-
-// for testing, we don't publish to maven central, but only to local maven
-publishing {
-    publications {
-        CrossCompile(MavenPublication) {
-            from components.java
-
-            artifact(javaDocJar)
-            artifact(sourceJar)
-
-            groupId project.group
-            artifactId project.ext.id
-            version project.version
-
-            pom {
-                withXml {
-                    // eliminate logback compile dependencies (no need in maven central POMs)
-                    def root = asNode()
-
-                    root.dependencies.'*'.findAll() {
-                        it.groupId.text() == "ch.qos.logback" && it.artifactId.text() == "logback-classic"
-                    }.each() {
-                        it.parent().remove(it)
-                    }
-                }
-
-                name = project.ext.id
-                url = project.ext.url
-                description = project.description
-
-                issueManagement {
-                    url = "${project.ext.url}/issues".toString()
-                    system = 'Gitea Issues'
-                }
-
-                organization {
-                    name = 'dorkbox, llc'
-                    url = 'https://dorkbox.com'
-                }
-
-                developers {
-                    developer {
-                        name = 'dorkbox, llc'
-                        email = 'email@dorkbox.com'
-                    }
-                }
-
-                scm {
-                    url = project.ext.url
-                    connection = "scm:${project.ext.url}.git".toString()
-                }
-            }
-        }
-    }
-
-    repositories {
-        maven {
-            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            credentials {
-                username sonatypeUsername
-                password sonatypePassword
-            }
-        }
-    }
-}
-
-signing {
-    required { hasProperty('sonatypeUsername') }
-    sign publishing.publications.CrossCompile
-}
-
-// we don't use maven with the plugin (it's uploaded separately to gradle plugins)
-tasks.withType(PublishToMavenRepository) {
-    onlyIf {
-        repository == publishing.repositories.maven &&
-        publication == publishing.publications.CrossCompile
-    }
-}
-tasks.withType(PublishToMavenLocal) {
-    onlyIf {
-        publication == publishing.publications.CrossCompile
     }
 }
