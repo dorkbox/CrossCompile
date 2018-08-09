@@ -26,13 +26,14 @@ buildscript {
     propsFile.withInputStream {props.load(it)}
     props.each {key, val -> project.ext.set(key, val)}
 
-    // for plugin publishing and license sources
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
+        // for plugin publishing
         classpath "com.gradle.publish:plugin-publish-plugin:0.9.10"
 
+        // for license sources
         classpath "gradle.plugin.com.dorkbox:Licensing:1.2.2"
         classpath "gradle.plugin.com.dorkbox:Licensing:1.2.2:sources"
     }
