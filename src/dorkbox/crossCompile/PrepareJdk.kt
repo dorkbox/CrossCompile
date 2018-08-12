@@ -388,7 +388,8 @@ class PrepareJdk : Plugin<Project> {
         val fileName = file.name
 
         if (!sha1Checksum.isEmpty()) {
-            val verify = project.tasks.create("verify$fileName", Verify::class.java)
+            val verify = project.tasks.create("verify${fileName.capitalize().substringBefore(".")}", Verify::class.java)
+            verify.group = "crossCompile"
             verify.src(file)
             verify.algorithm("SHA1")
             verify.checksum(sha1Checksum)
@@ -401,7 +402,7 @@ class PrepareJdk : Plugin<Project> {
             }
         }
         else {
-            // lame way to verify, but tnable to find or extract jar fihere is no checksum...
+            // lame way to verify, but unable to find or extract jar if there is no checksum...
             valid = file.canRead() && file.length() > 0
         }
 

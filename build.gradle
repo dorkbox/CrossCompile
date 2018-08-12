@@ -57,7 +57,7 @@ apply plugin: "com.dorkbox.Licensing"
 
 project.description = 'Plugin to auto-configure cross-compilation builds for java projects'
 project.group = 'com.dorkbox'
-project.version = '1.0'
+project.version = '1.0.1'
 
 project.ext.name = 'Gradle CrossCompile Plugin'
 project.ext.id = 'CrossCompile'
