@@ -137,7 +137,7 @@ tasks.withType(Jar) {
 gradlePlugin {
     plugins {
         CrossCompile {
-            id = 'com.dorkbox.CrossCompile'
+            id = "${project.group}.${project.ext.id}"
             implementationClass = 'dorkbox.crossCompile.PrepareJdk'
         }
     }
