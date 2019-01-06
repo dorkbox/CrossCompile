@@ -1,7 +1,7 @@
  - CrossCompile - 
    https://git.dorkbox.com/dorkbox/CrossCompile
-   Copyright 2018 - The Apache Software License, Version 2.0
-     dorkbox, llc
+   Copyright 2019 - The Apache Software License, Version 2.0
+     Dorkbox LLC
    Plugin to auto-configure cross-compilation builds for java projects
 
 
