@@ -29,6 +29,7 @@ import org.gradle.api.tasks.compile.AbstractCompile
 import org.gradle.api.tasks.compile.GroovyCompile
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.util.GradleVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.*
@@ -67,9 +68,9 @@ class PrepareJdk : Plugin<Project> {
                     needsJdk = true
                 }
 
-                project.tasks.forEach {
-                    if (!needsJdk && it is JavaCompile) {
-                        if (JavaVersion.toVersion(it.targetCompatibility) != JavaVersion.current()) {
+                project.tasks.forEach { task ->
+                    if (!needsJdk && task is JavaCompile) {
+                        if (JavaVersion.toVersion(task.targetCompatibility) != JavaVersion.current()) {
                             needsJdk = true
                         }
                     }
@@ -78,9 +79,12 @@ class PrepareJdk : Plugin<Project> {
                 if (needsJdk) {
                     // if there is a clean task (usually the first thing to run, if run), run after the clean task, otherwise run first.
 
-                    val hasClean = project.gradle.startParameter.taskNames.filter { it.toLowerCase().contains("clean") }
+                    val hasClean = project.gradle.startParameter.taskNames.filter { taskName ->
+                        taskName.toLowerCase().contains("clean")
+                    }
+
                     if (hasClean.isNotEmpty()) {
-                        val task = project.tasks.last { it.name == hasClean.last() }
+                        val task = project.tasks.last { task -> task.name == hasClean.last() }
 
                         task.doLast {
                             setupDownload(project)
@@ -285,44 +289,30 @@ class PrepareJdk : Plugin<Project> {
         return jdkRuntimes
     }
 
-    @Suppress("DEPRECATION")
     private fun configureTaskBootstrapClassPath(project: Project, task: Task, targetVersion: JavaVersion) {
         val location = versionInfo[targetVersion]?.file
 
         if (location != null) {
             val file = getUncompressedFile(location)
 
-            val bootstrapClasspath = project.files(file)
-            val bootClasspath = bootstrapClasspath.joinToString(File.pathSeparator)
+            if (task is KotlinCompile) {
+                logger.debug("Configuring task ${task.name} with ${file.absolutePath}")
+                task.kotlinOptions.jdkHome = file.absolutePath
+            }
+            else {
+                // java/groovy
+                val bootstrapClasspath = project.files(file)
+                val bootClasspath = bootstrapClasspath.joinToString(File.pathSeparator)
 
-
-            if (task is JavaCompile) {
-                logger.debug("Configuring task ${task.name} with $bootClasspath")
-
-                if (project.gradle.versionGreaterThan("4.2.1")) {
+                if (task is JavaCompile) {
+                    logger.debug("Configuring task ${task.name} with $bootClasspath")
                     task.options.bootstrapClasspath = bootstrapClasspath
                 }
-                else {
-                    task.options.bootClasspath = bootClasspath
-                }
-            }
-            else if (task is GroovyCompile) {
-                logger.debug("Configuring task ${task.name} with $bootClasspath")
-
-                if (project.gradle.versionGreaterThan("4.2.1")) {
+                else if (task is GroovyCompile) {
+                    logger.debug("Configuring task ${task.name} with $bootClasspath")
                     task.options.bootstrapClasspath = bootstrapClasspath
                 }
-                else {
-                    task.options.bootClasspath = bootClasspath
-                }
             }
-            //            project.plugins.withId("kotlin") {
-            //            logger.debug("Configuring task ${task.name} with $bootClasspath  ?????")
-            //
-            //                withType(KotlinCompile::class.java) {
-            //                    it.kotlinOptions.jdkHome = file.jdkHome
-            //                }
-            //            }
         }
         else {
             logger.error("Unable to determine bootstrap path $targetVersion for ${task.name}")
