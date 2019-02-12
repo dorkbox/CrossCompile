@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.nio.file.Paths
 import java.time.Instant
-import java.util.Properties
+import java.util.*
 import kotlin.reflect.full.declaredMemberProperties
 
 plugins {
@@ -140,7 +139,9 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.FAIL
+}
 
+tasks.jar.get().apply {
     manifest {
         // https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html
         attributes["Name"] = Extras.name
