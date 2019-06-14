@@ -16,7 +16,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.Instant
 import java.util.*
-import kotlin.reflect.full.declaredMemberProperties
 
 plugins {
     java
@@ -57,17 +56,12 @@ object Extras {
     val buildDate = Instant.now().toString()
 
     val JAVA_VERSION = JavaVersion.VERSION_1_8
+    val KOTLIN_VERSION = JavaVersion.VERSION_1_8
 }
-// assign everything to project or project.ext
-Extras::class.declaredMemberProperties.forEach {
-    if (!project.hasProperty(it.name)) {
-        when {
-            it.isConst -> project.extra.set(it.name, it.getter.call())
-            else -> project.extra.set(it.name, it.getter.call(Extras::class.objectInstance))
-        }
-    }
-}
-
+///////////////////////////////
+/////  assign 'Extras'
+///////////////////////////////
+GradleUtils.load("$projectDir/../../gradle.properties", Extras)
 description = Extras.description
 group = Extras.group
 version = Extras.version
@@ -133,13 +127,10 @@ java {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.isIncremental = true
-
-    sourceCompatibility = Extras.JAVA_VERSION.toString()
-    targetCompatibility = Extras.JAVA_VERSION.toString()
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = Extras.JAVA_VERSION.toString()
+    kotlinOptions.jvmTarget = Extras.KOTLIN_VERSION.toString()
 }
 
 tasks.withType<Jar> {
