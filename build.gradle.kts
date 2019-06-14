@@ -24,7 +24,7 @@ plugins {
 
     id("com.gradle.plugin-publish") version "0.10.0"
     id("com.dorkbox.Licensing") version "1.4"
-    id("com.dorkbox.GradleUtils") version "1.0"
+    id("com.dorkbox.GradleUtils") version "1.2"
 
     kotlin("jvm") version "1.3.11"
 }
@@ -56,7 +56,7 @@ object Extras {
     val tags = listOf("crosscompile", "compile", "java", "kotlin", "groovy")
     val buildDate = Instant.now().toString()
 
-    val JAVA_VERSION = JavaVersion.VERSION_1_8.toString()
+    val JAVA_VERSION = JavaVersion.VERSION_1_8
 }
 // assign everything to project or project.ext
 Extras::class.declaredMemberProperties.forEach {
@@ -125,17 +125,21 @@ dependencies {
 
     runtime("ch.qos.logback:logback-classic:1.1.6")
 }
+java {
+    sourceCompatibility = Extras.JAVA_VERSION
+    targetCompatibility = Extras.JAVA_VERSION
+}
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.isIncremental = true
 
-    sourceCompatibility = Extras.JAVA_VERSION
-    targetCompatibility = Extras.JAVA_VERSION
+    sourceCompatibility = Extras.JAVA_VERSION.toString()
+    targetCompatibility = Extras.JAVA_VERSION.toString()
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = Extras.JAVA_VERSION
+    kotlinOptions.jvmTarget = Extras.JAVA_VERSION.toString()
 }
 
 tasks.withType<Jar> {
@@ -182,13 +186,4 @@ pluginBundle {
             version = Extras.version
         }
     }
-}
-
-///////////////////////////////
-//////    Gradle Wrapper Configuration.
-/////  Run this task, then refresh the gradle project
-///////////////////////////////
-val wrapperUpdate by tasks.creating(Wrapper::class) {
-    gradleVersion = "5.1.1"
-    distributionUrl = distributionUrl.replace("bin", "all")
 }
