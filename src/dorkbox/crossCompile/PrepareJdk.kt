@@ -55,7 +55,8 @@ class PrepareJdk : Plugin<Project> {
 
 
     override fun apply(project: Project) {
-        project.plugins.apply(JavaBasePlugin::class.java)
+        project.rootProject.pluginManager.apply(JavaBasePlugin::class.java)
+        project.rootProject.pluginManager.apply(JavaBasePlugin::class.java)
 
         project.afterEvaluate {
             // don't waste time if this is not a java project
