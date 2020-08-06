@@ -21,15 +21,13 @@ plugins {
     java
     `java-gradle-plugin`
 
-    id("com.gradle.plugin-publish") version "0.10.0"
-    id("com.dorkbox.Licensing") version "1.4"
-    id("com.dorkbox.GradleUtils") version "1.6"
+    id("com.gradle.plugin-publish") version "0.12.0"
+    id("com.dorkbox.Licensing") version "2.0"
+    id("com.dorkbox.GradleUtils") version "1.8"
 
-    kotlin("jvm") version "1.3.11"
+    kotlin("jvm") version "1.3.72"
 }
 
-
-println("Gradle ${project.gradle.gradleVersion}")
 
 // load properties from custom location
 val propsFile = File("$projectDir/../../gradle.properties").normalize()
@@ -51,6 +49,7 @@ object Extras {
     const val name = "Gradle CrossCompile Plugin"
     const val id = "CrossCompile"
     const val vendor = "Dorkbox LLC"
+    const val vendorUrl = "https://dorkbox.com"
     const val url = "https://git.dorkbox.com/dorkbox/CrossCompile"
     val tags = listOf("crosscompile", "compile", "java", "kotlin", "groovy")
     val buildDate = Instant.now().toString()
@@ -58,33 +57,33 @@ object Extras {
     val JAVA_VERSION = JavaVersion.VERSION_1_8
     val KOTLIN_VERSION = JavaVersion.VERSION_1_8
 }
+
+
 ///////////////////////////////
 /////  assign 'Extras'
 ///////////////////////////////
 GradleUtils.load("$projectDir/../../gradle.properties", Extras)
-description = Extras.description
-group = Extras.group
-version = Extras.version
+GradleUtils.fixIntellijPaths()
 
 
 licensing {
     license(License.APACHE_2) {
-        author(Extras.vendor)
+        description(Extras.description)
         url(Extras.url)
-        note(Extras.description)
-    }
+        author(Extras.vendor)
 
-    license("OpenJDK", License.GPLv2_CLASSPATH) {
-        copyright(1995)
-        copyright(2006)
-        author("Oracle and/or its affiliates")
-        url("https://github.com/dorkbox/JavaBuilder/tree/master/jdkRuntimes")
-        url("http://jdk.java.net/")
-        url("https://github.com/alexkasko/openjdk-unofficial-builds")
-        note("Compressed OpenJDK runtimes for cross-target class compilation")
-        note(" http://hg.openjdk.java.net/jdk6/jdk6/jdk/file/79b17290a53c/THIRD_PARTY_README")
-        note(" http://hg.openjdk.java.net/jdk7/jdk7/jdk/file/9b8c96f96a0f/THIRD_PARTY_README")
-        note(" http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/THIRD_PARTY_README")
+        extra("OpenJDK", License.GPLv2_CLASSPATH) {
+            it.description("Compressed OpenJDK runtimes for cross-target class compilation")
+            it.copyright(1995)
+            it.copyright(2006)
+            it.author("Oracle and/or its affiliates")
+            it.url("https://github.com/dorkbox/JavaBuilder/tree/master/jdkRuntimes")
+            it.url("http://jdk.java.net/")
+            it.url("https://github.com/alexkasko/openjdk-unofficial-builds")
+            it.note(" http://hg.openjdk.java.net/jdk6/jdk6/jdk/file/79b17290a53c/THIRD_PARTY_README")
+            it.note(" http://hg.openjdk.java.net/jdk7/jdk7/jdk/file/9b8c96f96a0f/THIRD_PARTY_README")
+            it.note(" http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/THIRD_PARTY_README")
+        }
     }
 }
 
@@ -112,12 +111,12 @@ dependencies {
     // the kotlin version is taken from the plugin, so it is not necessary to set it here
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin")
 
-    implementation("de.undercouch:gradle-download-task:latest.release")
-    implementation("org.apache.commons:commons-compress:1.17")
+    implementation("de.undercouch:gradle-download-task:4.1.1")
+    implementation("org.apache.commons:commons-compress:1.20")
     implementation("org.tukaani:xz:1.8")
-    implementation("org.slf4j:slf4j-api:1.7.25")
+    implementation("org.slf4j:slf4j-api:1.7.30")
 
-    runtime("ch.qos.logback:logback-classic:1.1.6")
+    runtime("ch.qos.logback:logback-classic:1.2.3")
 }
 java {
     sourceCompatibility = Extras.JAVA_VERSION
