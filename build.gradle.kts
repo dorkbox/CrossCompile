@@ -21,11 +21,11 @@ plugins {
     java
     `java-gradle-plugin`
 
-    id("com.gradle.plugin-publish") version "0.12.0"
+    id("com.gradle.plugin-publish") version "0.14.0"
     id("com.dorkbox.Licensing") version "2.0"
-    id("com.dorkbox.GradleUtils") version "1.8"
+    id("com.dorkbox.GradleUtils") version "2.1"
 
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.32"
 }
 
 
@@ -113,7 +113,7 @@ dependencies {
 
     implementation("de.undercouch:gradle-download-task:4.1.1")
     implementation("org.apache.commons:commons-compress:1.20")
-    implementation("org.tukaani:xz:1.8")
+    implementation("org.tukaani:xz:1.9")
     implementation("org.slf4j:slf4j-api:1.7.30")
 
     runtime("ch.qos.logback:logback-classic:1.2.3")
