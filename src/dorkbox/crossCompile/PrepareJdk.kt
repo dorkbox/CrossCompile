@@ -81,7 +81,7 @@ class PrepareJdk : Plugin<Project> {
                     // if there is a clean task (usually the first thing to run, if run), run after the clean task, otherwise run first.
 
                     val hasClean = project.gradle.startParameter.taskNames.filter { taskName ->
-                        taskName.toLowerCase().contains("clean")
+                        taskName.lowercase(Locale.getDefault()).contains("clean")
                     }
 
                     if (hasClean.isNotEmpty()) {
@@ -378,8 +378,8 @@ class PrepareJdk : Plugin<Project> {
         var valid = false
         val fileName = file.name
 
-        if (!sha1Checksum.isEmpty()) {
-            val verify = project.tasks.create("verify${fileName.capitalize().substringBefore(".")}", Verify::class.java)
+        if (sha1Checksum.isNotEmpty()) {
+            val verify = project.tasks.create("verify${fileName.replaceFirstChar { it.titlecase() }.substringBefore(".")}", Verify::class.java)
             verify.group = "crossCompile"
             verify.src(file)
             verify.algorithm("SHA1")

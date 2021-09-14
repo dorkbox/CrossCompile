@@ -22,10 +22,10 @@ plugins {
     `java-gradle-plugin`
 
     id("com.gradle.plugin-publish") version "0.14.0"
-    id("com.dorkbox.Licensing") version "2.0"
-    id("com.dorkbox.GradleUtils") version "2.1"
+    id("com.dorkbox.Licensing") version "2.9.2"
+    id("com.dorkbox.GradleUtils") version "2.10"
 
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.21"
 }
 
 
@@ -73,16 +73,16 @@ licensing {
         author(Extras.vendor)
 
         extra("OpenJDK", License.GPLv2_CLASSPATH) {
-            it.description("Compressed OpenJDK runtimes for cross-target class compilation")
-            it.copyright(1995)
-            it.copyright(2006)
-            it.author("Oracle and/or its affiliates")
-            it.url("https://github.com/dorkbox/JavaBuilder/tree/master/jdkRuntimes")
-            it.url("http://jdk.java.net/")
-            it.url("https://github.com/alexkasko/openjdk-unofficial-builds")
-            it.note(" http://hg.openjdk.java.net/jdk6/jdk6/jdk/file/79b17290a53c/THIRD_PARTY_README")
-            it.note(" http://hg.openjdk.java.net/jdk7/jdk7/jdk/file/9b8c96f96a0f/THIRD_PARTY_README")
-            it.note(" http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/THIRD_PARTY_README")
+            description("Compressed OpenJDK runtimes for cross-target class compilation")
+            copyright(1995)
+            copyright(2006)
+            author("Oracle and/or its affiliates")
+            url("https://github.com/dorkbox/JavaBuilder/tree/master/jdkRuntimes")
+            url("http://jdk.java.net/")
+            url("https://github.com/alexkasko/openjdk-unofficial-builds")
+            note(" http://hg.openjdk.java.net/jdk6/jdk6/jdk/file/79b17290a53c/THIRD_PARTY_README")
+            note(" http://hg.openjdk.java.net/jdk7/jdk7/jdk/file/9b8c96f96a0f/THIRD_PARTY_README")
+            note(" http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/THIRD_PARTY_README")
         }
     }
 }
@@ -116,7 +116,7 @@ dependencies {
     implementation("org.tukaani:xz:1.9")
     implementation("org.slf4j:slf4j-api:1.7.30")
 
-    runtime("ch.qos.logback:logback-classic:1.2.3")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
 }
 java {
     sourceCompatibility = Extras.JAVA_VERSION
