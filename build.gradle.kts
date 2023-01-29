@@ -13,31 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.time.Instant
-import java.util.*
 
 plugins {
     java
     `java-gradle-plugin`
 
-    id("com.gradle.plugin-publish") version "0.14.0"
-    id("com.dorkbox.Licensing") version "2.9.2"
-    id("com.dorkbox.GradleUtils") version "2.13"
+    id("com.gradle.plugin-publish") version "1.1.0"
+    id("com.dorkbox.GradleUtils") version "3.9"
+    id("com.dorkbox.Licensing") version "2.19.1"
 
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.7.0"
 }
 
-
-// load properties from custom location
-val propsFile = File("$projectDir/../../gradle.properties").normalize()
-if (propsFile.canRead()) {
-    println("Loading custom property data from: $propsFile")
-
-    val props = Properties()
-    props.load(propsFile.inputStream())
-    props.forEach{(k, v) -> project.extra.set(k as String, v as String)}
-}
 
 object Extras {
     // set for the project
@@ -54,7 +42,6 @@ object Extras {
     val tags = listOf("crosscompile", "compile", "java", "kotlin", "groovy")
     val buildDate = Instant.now().toString()
 
-    val JAVA_VERSION = JavaVersion.VERSION_1_8
     val KOTLIN_VERSION = JavaVersion.VERSION_1_8
 }
 
@@ -63,8 +50,8 @@ object Extras {
 /////  assign 'Extras'
 ///////////////////////////////
 GradleUtils.load("$projectDir/../../gradle.properties", Extras)
-GradleUtils.fixIntellijPaths()
-
+GradleUtils.defaults()
+GradleUtils.compileConfiguration(JavaVersion.VERSION_1_8)
 
 licensing {
     license(License.APACHE_2) {
@@ -89,13 +76,6 @@ licensing {
 
 sourceSets {
     main {
-        java {
-            setSrcDirs(listOf("src"))
-
-            // want to include kotlin files for the source. 'setSrcDirs' resets includes...
-            include("**/*.kt")
-        }
-
         resources {
             setSrcDirs(listOf("jdkRuntimes"))
             exclude("**/*.jar")
@@ -103,37 +83,16 @@ sourceSets {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     // the kotlin version is taken from the plugin, so it is not necessary to set it here
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin")
 
-    implementation("de.undercouch:gradle-download-task:4.1.1")
-    implementation("org.apache.commons:commons-compress:1.20")
-    implementation("org.tukaani:xz:1.9")
-    implementation("org.slf4j:slf4j-api:1.7.30")
+    api("de.undercouch:gradle-download-task:4.1.1")
+    api("org.apache.commons:commons-compress:1.21")
+    api("org.tukaani:xz:1.9")
+    api("org.slf4j:slf4j-api:1.7.30")
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
-}
-java {
-    sourceCompatibility = Extras.JAVA_VERSION
-    targetCompatibility = Extras.JAVA_VERSION
-}
-
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
-    options.isIncremental = true
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = Extras.KOTLIN_VERSION.toString()
-}
-
-tasks.withType<Jar> {
-    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 tasks.jar.get().apply {
@@ -150,29 +109,21 @@ tasks.jar.get().apply {
         attributes["Implementation-Vendor"] = Extras.vendor
     }
 }
-
-/////////////////////////////////
-////////    Plugin Publishing + Release
-/////////////////////////////////
+//
+///////////////////////////////////
+//////////    Plugin Publishing + Release
+///////////////////////////////////
 gradlePlugin {
+//    website.set(Extras.url)
+//    vcsUrl.set(Extras.url)
+
     plugins {
         create("CrossCompile") {
             id = "${Extras.group}.${Extras.id}"
             implementationClass = "dorkbox.crossCompile.PrepareJdk"
-        }
-    }
-}
-
-pluginBundle {
-    website = Extras.url
-    vcsUrl = Extras.url
-
-    (plugins) {
-        "CrossCompile" {
-            id = "${Extras.group}.${Extras.id}"
             displayName = Extras.name
             description = Extras.description
-            tags = Extras.tags
+//            tags = Extras.tags
             version = Extras.version
         }
     }
