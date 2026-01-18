@@ -1,21 +1,10 @@
  - CrossCompile - Plugin to auto-configure cross-compilation builds for java projects
    [The Apache Software License, Version 2.0]
    https://git.dorkbox.com/dorkbox/CrossCompile
-   Copyright 2021
+   Copyright 2026
      Dorkbox LLC
 
    Extra license information
-     - OpenJDK - Compressed OpenJDK runtimes for cross-target class compilation
-       [GNU General Public License, version 2, with the Classpath Exception]
-       https://github.com/dorkbox/JavaBuilder/tree/master/jdkRuntimes
-       http://jdk.java.net/
-       https://github.com/alexkasko/openjdk-unofficial-builds
-       Copyright 2006
-         Oracle and/or its affiliates
-        http://hg.openjdk.java.net/jdk6/jdk6/jdk/file/79b17290a53c/THIRD_PARTY_README
-        http://hg.openjdk.java.net/jdk7/jdk7/jdk/file/9b8c96f96a0f/THIRD_PARTY_README
-        http://hg.openjdk.java.net/jdk8/jdk8/jdk/file/687fd7c7986d/THIRD_PARTY_README
-
      - Kotlin - 
        [The Apache Software License, Version 2.0]
        https://github.com/JetBrains/kotlin
@@ -23,22 +12,3 @@
          JetBrains s.r.o. and Kotlin Programming Language contributors
        Kotlin Compiler, Test Data+Libraries, and Tools repository contain third-party code, to which different licenses may apply
        See: https://github.com/JetBrains/kotlin/blob/master/license/README.md
-
-     - XZ for Java - Complete implementation of XZ data compression in pure Java
-       [Public Domain, per Creative Commons CC0]
-       https://tukaani.org/xz/java.html
-       Copyright 2021
-         Lasse Collin
-         Igor Pavlov
-
-     - SLF4J - Simple facade or abstraction for various logging frameworks
-       [MIT License]
-       http://www.slf4j.org
-       Copyright 2021
-         QOS.ch
-
-     - Logback - Logback is a logging framework for Java applications
-       [The Apache Software License, Version 2.0]
-       http://logback.qos.ch
-       Copyright 2021
-         QOS.ch
