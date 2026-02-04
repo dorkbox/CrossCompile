@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.time.Instant
 
 plugins {
     java
@@ -21,7 +20,7 @@ plugins {
 
     id("com.gradle.plugin-publish") version "2.0.0"
 
-    id("com.dorkbox.GradleUtils") version "4.4"
+    id("com.dorkbox.GradleUtils") version "4.8"
     id("com.dorkbox.Licensing") version "3.1"
     id("com.dorkbox.VersionUpdate") version "3.0"
 
@@ -29,27 +28,18 @@ plugins {
 }
 
 
-object Extras {
-    // set for the project
-    const val description = "Plugin to auto-configure cross-compilation builds for java projects"
-    const val group = "com.dorkbox"
-    const val version = "2.0"
-
-    // set as project.ext
-    const val name = "Gradle CrossCompile Plugin"
-    const val id = "CrossCompile"
-    const val vendor = "Dorkbox LLC"
-    const val vendorUrl = "https://dorkbox.com"
-    const val url = "https://git.dorkbox.com/dorkbox/CrossCompile"
-    val tags = listOf("crosscompile", "compile", "java", "kotlin", "groovy")
-    val buildDate = Instant.now().toString()
-}
-
-
 ///////////////////////////////
 /////  assign 'Extras'
 ///////////////////////////////
-GradleUtils.load("$projectDir/../../gradle.properties", Extras)
+GradleUtils.load {
+    group = "com.dorkbox"
+    id = "CrossCompile"
+    description = "Plugin to auto-configure cross-compilation builds for java projects"
+    name = "Gradle CrossCompile Plugin"
+    version = "2.0"
+    vendor = "Dorkbox LLC"
+    url = "https://git.dorkbox.com/dorkbox/CrossCompile"
+}
 GradleUtils.defaults()
 GradleUtils.compileConfiguration(JavaVersion.VERSION_25)
 
@@ -61,20 +51,6 @@ licensing {
     }
 }
 
-tasks.jar.get().apply {
-    manifest {
-        // https://docs.oracle.com/javase/tutorial/deployment/jar/packageman.html
-        attributes["Name"] = Extras.name
-
-        attributes["Specification-Title"] = Extras.name
-        attributes["Specification-Version"] = Extras.version
-        attributes["Specification-Vendor"] = Extras.vendor
-
-        attributes["Implementation-Title"] = "${Extras.group}.${Extras.id}"
-        attributes["Implementation-Version"] = Extras.buildDate
-        attributes["Implementation-Vendor"] = Extras.vendor
-    }
-}
 //
 ///////////////////////////////////
 //////////    Plugin Publishing + Release
@@ -85,12 +61,12 @@ gradlePlugin {
 
     plugins {
         register("CrossCompile") {
-            id = "${Extras.group}.${Extras.id}"
+            id = Extras.groupAndId
             implementationClass = "dorkbox.crossCompile.PrepareJdk"
             displayName = Extras.name
             description = Extras.description
-            tags = Extras.tags
             version = Extras.version
+            tags.set(listOf("crosscompile", "compile", "java", "kotlin"))
         }
     }
 }
